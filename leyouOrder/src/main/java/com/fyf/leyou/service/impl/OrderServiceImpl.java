@@ -96,17 +96,10 @@ public class OrderServiceImpl implements OrderService {
                     Long limitQuanty = Long.valueOf(policyMap.get("quanty").toString());
                     //创建redis计数器,限制1000人进入，每进入一人+1
                     if (stringRedisTemplate.opsForValue().increment("SKU_QUANTY_" + sku_id, 1) <= limitQuanty) {
-                        //写入队列
-                        // 订单服务进行监听，插入订单表
-                        // tb_order: order_id, total_fee, actual_fee, post_fee, payment_type, user_id, status, create_time
-                        // tb_order_detail: order_id, sku_id, num, title, own_spec, price, image, create_time
-                        // tb_sku: sku_id, title, images, stock, price, indexes, own_spec
-                        //从redis中获得商品信息
+
                         String sku = stringRedisTemplate.opsForValue().get("SKU_" + sku_id);
                         JSONObject skuMap = JSONObject.parseObject(sku);
-                        //订单信息，存入订单消息队列，订单服务来取
                         Map<String, Object> orderMap = new HashMap<>();
-                        //上面获取的order_id
                         orderMap.put("total_fee", skuMap.get("price"));
                         orderMap.put("actual_fee", policyMap.get("price"));
                         orderMap.put("post_fee", 0);
@@ -136,7 +129,6 @@ public class OrderServiceImpl implements OrderService {
                         }
 
                     }
-                    //超过1000人，返回商品已经售完了
                     else {
                         resultMap.put("result", false);
                         resultMap.put("msg", "商品已售完！");
@@ -160,7 +152,7 @@ public class OrderServiceImpl implements OrderService {
             return resultMap;
         }
 
-        //下单成功，返回正常数据，带着订单号,跳到支付页面使用
+        //下单成功，返回正常数据，跳到支付页面
         resultMap.put("result", true);
         resultMap.put("msg", "");
         resultMap.put("order_id", order_id);
