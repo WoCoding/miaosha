@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 接口的命名空间,将该配置文件和接口绑定-->
+<mapper namespace="com.fyf.leyou.dao.OrderDao">
+    <insert id="addOrder" parameterType="map" useGeneratedKeys="true" keyProperty="order_id">
+        insert into tb_order (total_fee, actual_fee, post_fee, payment_type, user_id, status, create_time)
+        values (#{total_fee}, #{actual_fee}, #{post_fee}, #{payment_type}, #{user_id}, #{status}, #{create_time})
+    </insert>
+    <insert id="addMessage" parameterType="String">
+        insert into t_confirm(sku_id) values (#{sku_id});
+    </insert>
+    <select id="getMessage" resultType="String">
+        select sku_id from t_confirm
+    </select>
+    <delete id="deleteMessage"  parameterType="String">
+        delete from tb_confirm where sku_id=#{sku_id}
+    </delete>
+    <insert id="addOrderDetail" parameterType="map">
+        INSERT INTO tb_order_detail (order_id, sku_id, num, title, own_spec, price, image, create_time)
+                VALUES (#{order_id}, #{sku_id}, #{num}, #{title}, #{own_spec}, #{price}, #{image}, #{create_time})
+    </insert>
+    <update id="updateOrderStatus" parameterType="String">
+        update tb_order set status = 2 where order_id = #{order_id}
+    </update>
+    <select id="getOrder" parameterType="String" resultType="map">
+        SELECT d.sku_id, m.order_id, d.price
+        FROM tb_order m INNER JOIN tb_order_detail d ON m.order_id = d.order_id
+        WHERE m.order_id = #{order_id}
+    </select>
+</mapper>

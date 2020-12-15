@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 接口的命名空间,将该配置文件和接口绑定-->
+<mapper namespace="com.fyf.leyou.dao.StockDao">
+    <select id="getStockList" resultType="map">
+        select id AS sku_id, title, images, stock, price, indexes, own_spec
+        from tb_sku
+    </select>
+    <select id="getStockById" resultType="map" parameterType="String">
+       SELECT tb_sku.id AS sku_id,tb_sku.spu_id, tb_sku.title, tb_sku.images,
+        tb_sku.stock, tb_sku.price, tb_sku.indexes,tb_sku.own_spec, tb_sku.enable,
+        tb_sku.create_time, tb_sku.update_time,tb_spu_detail.description,tb_spu_detail.special_spec
+        FROM tb_sku INNER JOIN tb_spu_detail ON tb_spu_detail.spu_id=tb_sku.spu_id
+        WHERE tb_sku.id=#{sku_id}
+    </select>
+    <insert id="insertLimitPolicy" parameterType="map">
+        insert into tb_limit_policy (sku_id, quanty, price, begin_time, end_time)
+        values(#{sku_id}, #{quanty}, #{price}, #{begin_time}, #{end_time})
+    </insert>
+
+</mapper>

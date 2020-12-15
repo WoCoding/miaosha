@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 接口的命名空间,将该配置文件和接口绑定-->
+<mapper namespace="com.fyf.leyou.dao.UserDao">
+    <select id="getUser" parameterType="String" resultType="map">
+        select id AS user_id, username, phone, password
+        from tb_user where username = #{username}
+    </select>
+    <insert id="addUser" parameterType="map" keyProperty="id" useGeneratedKeys="true">
+        insert into tb_user (username, phone, password)
+        values (#{username}, #{username}, #{password})
+    </insert>
+</mapper>
