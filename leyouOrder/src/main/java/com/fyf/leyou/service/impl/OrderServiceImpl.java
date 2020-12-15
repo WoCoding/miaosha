@@ -18,6 +18,7 @@ import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -31,12 +32,15 @@ public class OrderServiceImpl implements OrderService {
     private RestTemplate restTemplate;
     @Autowired
     private Sender sender;
-/*    @PostConstruct
+    /*@PostConstruct
     public void init(){
-        Map stockMap=restTemplate.getForObject("http://leyouStockServer/getStockList",Map.class);
-        String stock= JSON.toJSONString(stockMap);
-        String sku_id = stockMap.get("sku_id").toString();
-        stringRedisTemplate.opsForValue().set("LIMIT_POLICY_"+sku_id,stock);
+        List<Map<String, Object>> stockList =restTemplate.getForObject("http://leyouStockServer/getStockList", List.class);
+        for(Map stockMap:stockList){
+            String sku_id = stockMap.get("sku_id").toString();
+            String stock= stockMap.get("stock").toString();
+            stringRedisTemplate.opsForValue().set("LIMIT_POLICY_"+sku_id,stock);
+        }
+
     }*/
     //创建订单
     @Override
